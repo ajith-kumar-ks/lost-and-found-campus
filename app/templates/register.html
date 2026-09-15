@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+</head>
+<body>
+
+    <h1>Create Account</h1>
+
+    <form method="POST">
+
+        {{ form.hidden_tag() }}
+
+        <p>
+            {{ form.name.label }}
+            {{ form.name() }}
+        </p>
+
+        <p>
+            {{ form.email.label }}
+            {{ form.email() }}
+        </p>
+
+        <p>
+            {{ form.password.label }}
+            {{ form.password() }}
+        </p>
+
+        <p>
+            {{ form.submit() }}
+        </p>
+
+    </form>
+
+    <p>
+        Already have an account?
+        <a href="{{ url_for('main.login') }}">Login</a>
+    </p>
+
+</body>
+</html>
