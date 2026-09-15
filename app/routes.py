@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, redirect, url_for, flash
 from app import db
 from app.models import User
-from app.forms import RegistrationForm
-from werkzeug.security import generate_password_hash
+from app.forms import RegistrationForm, LoginForm
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 main = Blueprint('main', __name__)
@@ -59,3 +59,20 @@ def register():
         return redirect(url_for("main.login"))
 
     return render_template("register.html", form=form)
+
+
+@main.route("/login", methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+
+    if form.validate_on_submit():
+
+        user = User.query.filter_by(email = form.email.data).first()
+
+        if user and check_password_hash(user.password, form.password.data):
+            flash("Login successful", "success")
+            return redirect(url_for('main.home'))
+
+        flash("Invalid email or password", "danger")
+
+    return render_template('login.html', form = form)
