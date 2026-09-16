@@ -3,7 +3,7 @@ from app import db
 from app.models import User
 from app.forms import RegistrationForm, LoginForm
 from werkzeug.security import generate_password_hash, check_password_hash
-
+from flask_login import login_required, login_user, logout_user, current_user
 
 main = Blueprint('main', __name__)
 
@@ -13,21 +13,25 @@ def home():
     return render_template('home.html')
 
 @main.route("/lost")
+@login_required
 def lost():
     return render_template("lost.html")
 
 
 @main.route("/found")
+@login_required
 def found():
     return render_template("found.html")
 
 
 @main.route("/lost-items")
+@login_required
 def lost_items():
     return render_template("lost_items.html")
 
 
 @main.route("/found-items")
+@login_required
 def found_items():
     return render_template("found_items.html")
 
@@ -70,9 +74,20 @@ def login():
         user = User.query.filter_by(email = form.email.data).first()
 
         if user and check_password_hash(user.password, form.password.data):
+            login_user(user) #Flask-Login internally manages the current user.And in a template, Flask-Login makes current_user available automatically:
             flash("Login successful", "success")
             return redirect(url_for('main.home'))
 
         flash("Invalid email or password", "danger")
 
     return render_template('login.html', form = form)
+
+
+
+@main.route("/logout")
+def logout():
+    logout_user()
+
+    flash("You have been logged out.", "info")
+
+    return redirect(url_for("main.home"))
