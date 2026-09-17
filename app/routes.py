@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, flash
 from app import db
-from app.models import User
-from app.forms import RegistrationForm, LoginForm
+from app.models import User, Item
+from app.forms import RegistrationForm, LoginForm, ItemForm
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_required, login_user, logout_user, current_user
 
@@ -91,3 +91,23 @@ def logout():
     flash("You have been logged out.", "info")
 
     return redirect(url_for("main.home"))
+
+
+@main.route('/report', methods=['GET', 'POST'])
+def report():
+    form = ItemForm()
+
+    if form.validate_on_submit():
+        item = Item(
+            name = form.name.data,
+            category = form.category.data,
+            location = form.location.data,
+            description = form.description.data,
+            type = form.type.data,
+            user_id = current_user.id
+        )
+        db.session.add(item)
+        db.session.commit()
+        flash("Item reported successfully!", "success")
+        return redirect(url_for("main.home"))
+    return render_template('report.html', form = form)

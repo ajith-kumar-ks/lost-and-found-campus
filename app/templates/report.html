@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Report Item</title>
+</head>
+
+<body>
+
+    <h1>Report Lost / Found Item</h1>
+    
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+
+        {{ form.hidden_tag() }}
+
+        <p>
+            {{ form.name.label }}
+            {{ form.name() }}
+        </p>
+
+        <p>
+            {{ form.category.label }}
+            {{ form.category() }}
+        </p>
+
+        <p>
+            {{ form.location.label }}
+            {{ form.location() }}
+        </p>
+
+        <p>
+            {{ form.description.label }}
+            {{ form.description() }}
+        </p>
+
+        <p>
+            {{ form.type.label }}
+            {{ form.type() }}
+        </p>
+
+        <p>
+            {{ form.submit() }}
+        </p>
+
+    </form>
+
+    
+</body>
+</html>
+
