@@ -27,13 +27,15 @@ def found():
 @main.route("/lost-items")
 @login_required
 def lost_items():
-    return render_template("lost_items.html")
+    items = Item.query.filter_by(type='lost').all()
+    return render_template("lost_items.html", items = items)
 
 
 @main.route("/found-items")
 @login_required
 def found_items():
-    return render_template("found_items.html")
+    items = Item.query.filter_by(type='found').all()
+    return render_template("found_items.html", items=items)
 
 
 @main.route("/register", methods=["GET", "POST"])
