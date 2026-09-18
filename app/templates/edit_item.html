@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Item</title>
+</head>
+<body>
+
+    <h1>Edit Item</h1>
+
+    <form method="POST">
+
+        {{ form.hidden_tag() }}
+
+        <p>
+            {{ form.name.label }}
+            {{ form.name() }}
+        </p>
+
+        <p>
+            {{ form.category.label }}
+            {{ form.category() }}
+        </p>
+
+        <p>
+            {{ form.location.label }}
+            {{ form.location() }}
+        </p>
+
+        <p>
+            {{ form.description.label }}
+            {{ form.description() }}
+        </p>
+
+        <p>
+            {{ form.type.label }}
+            {{ form.type() }}
+        </p>
+
+        <p>
+            {{ form.submit(value="Update Item") }}
+        </p>
+
+    </form>
+
+    <a href="{{ url_for('main.item_detail', item_id=item.id) }}">
+        Cancel
+    </a>
+
+</body>
+</html>

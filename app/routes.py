@@ -118,3 +118,46 @@ def report():
         flash("Item reported successfully!", "success")
         return redirect(url_for("main.home"))
     return render_template('report.html', form = form)
+
+
+
+@main.route('/item/<int:item_id>/edit', methods = ['GET', 'POST'])
+def edit_item(item_id):
+    item = Item.query.get_or_404(item_id)
+
+    if (current_user.id != item.user_id):
+        flash("You are not allowed to edit this item.", "danger")
+        return redirect(url_for("main.item_detail", item_id=item.id))
+
+    form = ItemForm(obj = item) #It is used to pre-fill the edit form with the existing item's data.
+
+    if form.validate_on_submit():
+        item.name = form.name.data
+        item.category = form.category.data
+        item.location = form.location.data
+        item.description = form.description.data
+        item.type = form.type.data
+
+        db.session.commit()
+        flash("Item updated successfully!", "success")
+
+        return redirect(url_for("main.item_detail", item_id=item.id))
+
+    return render_template("edit_item.html", form=form, item=item)
+
+
+@main.route('/item/<int:item_id>/delete', methods=['POST'])
+@login_required
+def delete_item(item_id):
+    item = Item.query.get_or_404(item_id)
+
+    if (current_user.id != item.user_id):
+        flash("You are not allowed to delete this item.", "danger")
+        return redirect(url_for("main.item_detail", item_id=item.id))
+
+    db.session.delete(item)
+    db.session.commit()
+    
+    flash("Item deleted successfully!", "success")
+
+    return redirect(url_for("main.home"))
