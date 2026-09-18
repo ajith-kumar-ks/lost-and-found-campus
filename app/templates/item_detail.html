@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Item Details</title>
+</head>
+<body>
+
+    <h1>Item Details</h1>
+
+    <h2>{{ item.name }}</h2>
+
+    <p>
+        <strong>Type:</strong>
+        {{ item.type }}
+    </p>
+
+    <p>
+        <strong>Category:</strong>
+        {{ item.category }}
+    </p>
+
+    <p>
+        <strong>Location:</strong>
+        {{ item.location }}
+    </p>
+
+    <p>
+        <strong>Description:</strong>
+        {{ item.description }}
+    </p>
+
+    <p>
+        <strong>Status:</strong>
+        {{ item.status }}
+    </p>
+
+    <p>
+        <strong>Reported by:</strong>
+        {{ item.reporter.name }}
+    </p>
+
+    <a href="{{ url_for('main.lost_items') }}">
+        Back to Lost Items
+    </a>
+
+</body>
+</html>

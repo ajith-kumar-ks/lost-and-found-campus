@@ -30,6 +30,11 @@ def lost_items():
     items = Item.query.filter_by(type='lost').all()
     return render_template("lost_items.html", items = items)
 
+@main.route('/item/<int:item_id>')
+def item_detail(item_id):
+    item = Item.query.get_or_404(item_id)
+    return render_template('item_detail.html', item=item)
+
 
 @main.route("/found-items")
 @login_required
