@@ -61,6 +61,21 @@
     <button type="submit">
         Delete Item
     </button>
+    <br>
+    {% if current_user.is_authenticated
+      and current_user.id != item.user_id
+      and item.status == "active" %}
+
+    <form method="POST"
+          action="{{ url_for('main.claim_item', item_id=item.id) }}">
+
+        <button type="submit">
+            Claim This Item
+        </button>
+
+    </form>
+
+{% endif %}
 
 </form>
 

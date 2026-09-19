@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, flash
 from app import db
-from app.models import User, Item
+from app.models import User, Item, Claim
 from app.forms import RegistrationForm, LoginForm, ItemForm
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_required, login_user, logout_user, current_user
@@ -161,3 +161,37 @@ def delete_item(item_id):
     flash("Item deleted successfully!", "success")
 
     return redirect(url_for("main.home"))
+
+
+@main.route("/item/<int:item_id>/claim", methods=["POST"])
+@login_required
+def claim_item(item_id):
+
+    item = Item.query.get_or_404(item_id)
+
+    # Cannot claim your own item
+    if item.user_id == current_user.id:
+        flash("You cannot claim your own item.", "danger")
+        return redirect(url_for("main.item_detail", item_id=item.id))
+
+    # Check whether this user already submitted a claim
+    existing_claim = Claim.query.filter_by(
+        item_id=item.id,
+        claimant_id=current_user.id
+    ).first()
+
+    if existing_claim:
+        flash("You have already submitted a claim.", "warning")
+        return redirect(url_for("main.item_detail", item_id=item.id))
+
+    claim = Claim(
+        item_id=item.id,
+        claimant_id=current_user.id
+    )
+
+    db.session.add(claim)
+    db.session.commit()
+
+    flash("Claim request submitted!", "success")
+
+    return redirect(url_for("main.item_detail", item_id=item.id))
