@@ -61,25 +61,52 @@
     <button type="submit">
         Delete Item
     </button>
+    
+</form>
+    {% endif %}
     <br>
+
+    
     {% if current_user.is_authenticated
       and current_user.id != item.user_id
       and item.status == "active" %}
 
-    <form method="POST"
-          action="{{ url_for('main.claim_item', item_id=item.id) }}">
+  {% if item.type == "lost" %}
 
-        <button type="submit">
-            Claim This Item
-        </button>
+        <p>
+            Did you find this item?
+        </p>
 
-    </form>
+        <form method="POST"
+              action="{{ url_for('main.claim_item', item_id=item.id) }}">
+
+            <button type="submit">
+                I Found This Item
+            </button>
+
+        </form>
+
+    {% elif item.type == "found" %}
+
+        <p>
+            Is this your lost item?
+        </p>
+
+        <form method="POST"
+              action="{{ url_for('main.claim_item', item_id=item.id) }}">
+
+            <button type="submit">
+                This Is My Item
+            </button>
+
+        </form>
+
+    {% endif %}
 
 {% endif %}
 
-</form>
 
-{% endif %}
+
 
 </body>
 </html>

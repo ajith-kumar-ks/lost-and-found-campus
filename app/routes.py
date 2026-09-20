@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, flash
 from app import db
 from app.models import User, Item, Claim
-from app.forms import RegistrationForm, LoginForm, ItemForm
+from app.forms import RegistrationForm, LoginForm, ItemForm, Claimform
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_required, login_user, logout_user, current_user
 
@@ -163,7 +163,7 @@ def delete_item(item_id):
     return redirect(url_for("main.home"))
 
 
-@main.route("/item/<int:item_id>/claim", methods=["POST"])
+@main.route("/item/<int:item_id>/claim", methods=['GET', "POST"])
 @login_required
 def claim_item(item_id):
 
@@ -184,14 +184,86 @@ def claim_item(item_id):
         flash("You have already submitted a claim.", "warning")
         return redirect(url_for("main.item_detail", item_id=item.id))
 
-    claim = Claim(
-        item_id=item.id,
-        claimant_id=current_user.id
-    )
+    form = Claimform()
 
-    db.session.add(claim)
+    if form.validate_on_submit():
+        claim = Claim(
+            item_id=item.id,
+            claimant_id=current_user.id,
+            message=form.message.data,
+            verification_details=form.verification_details.data
+        )
+
+        db.session.add(claim)
+        db.session.commit()
+
+        flash("Claim request submitted!", "success")
+
+        return redirect(url_for("main.item_detail", item_id=item.id))
+
+    return render_template('claim.html', form=form, item=item)
+
+
+
+@main.route("/my-claims")
+@login_required
+def my_claims():
+
+    claims = Claim.query.join(Item).filter(
+        Item.user_id == current_user.id
+    ).all() #Connect the Claim table with the Item table.ie, Connect each claim to its Item. Only take items reported by the logged-in user.Only show claims made on items reported by the currently logged-in user.
+
+    return render_template("my_claims.html", claims=claims)
+
+
+@main.route("/claim/<int:claim_id>/accept", methods=["POST"])
+@login_required
+def accept_claim(claim_id):
+
+    claim = Claim.query.get_or_404(claim_id)
+
+    # Only the reporter can accept
+    if claim.item.user_id != current_user.id:
+        flash("You are not allowed to accept this request.", "danger")
+        return redirect(url_for("main.my_claims"))
+
+    if claim.status != "pending":
+        flash("This request has already been processed.", "warning")
+        return redirect(url_for("main.my_claims"))
+
+    claim.status = "accepted"
+    claim.item.status = "claimed"
+
     db.session.commit()
 
-    flash("Claim request submitted!", "success")
+    flash("Claim accepted!", "success")
 
-    return redirect(url_for("main.item_detail", item_id=item.id))
+    return redirect(url_for("main.my_claims"))
+
+
+
+
+@main.route("/claim/<int:claim_id>/reject", methods=["POST"])
+@login_required
+def reject_claim(claim_id):
+
+    claim = Claim.query.get_or_404(claim_id)
+
+    # Only the reporter can accept
+    if claim.item.user_id != current_user.id:
+        flash("You are not allowed to accept this request.", "danger")
+        return redirect(url_for("main.my_claims"))
+
+    if claim.status != "pending":
+        flash("This request has already been processed.", "warning")
+        return redirect(url_for("main.my_claims"))
+
+    claim.status = "rejected"
+
+    db.session.commit()
+
+    flash("Claim rejected!", "info")
+
+    return redirect(url_for("main.my_claims"))
+
+

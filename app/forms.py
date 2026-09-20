@@ -27,3 +27,9 @@ class ItemForm(FlaskForm):
     ],
     validators=[DataRequired()])
     submit = SubmitField("Submit")
+
+
+class Claimform(FlaskForm):
+    message = TextAreaField("Why do you think this item matches?", validators=[DataRequired()])
+    verification_details = TextAreaField("Provide the identifying details", validators=[DataRequired()])
+    submit = SubmitField("Submit Claim")

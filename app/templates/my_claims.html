@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Claim Requests</title>
+</head>
+
+<body>
+
+    <h1>Requests on My Items</h1>
+
+    {% if claims %}
+
+        {% for claim in claims %}
+
+            <div>
+
+                <h2>{{ claim.item.name }}</h2>
+
+                <p>
+                    <strong>Item Type:</strong>
+                    {{ claim.item.type }}
+                </p>
+
+                <p>
+                    <strong>Location:</strong>
+                    {{ claim.item.location }}
+                </p>
+
+                <hr>
+
+                <h3>Claimant Information</h3>
+
+                <p>
+                    <strong>Name:</strong>
+                    {{ claim.claimant.name }}
+                </p>
+
+                <p>
+                    <strong>Email:</strong>
+                    {{ claim.claimant.email }}
+                </p>
+
+                <h3>Claimant's Message</h3>
+
+                <p>
+                    {{ claim.message }}
+                </p>
+
+                <h3>Verification Details</h3>
+
+                <p>
+                    {{ claim.verification_details }}
+                </p>
+
+                <p>
+                    <strong>Status:</strong>
+                    {{ claim.status }}
+                </p>
+
+                {% if claim.status == "pending" %}
+
+                    <form method="POST"
+                          action="{{ url_for('main.accept_claim', claim_id=claim.id) }}"
+                          style="display:inline;">
+
+                        <button type="submit">
+                            Accept
+                        </button>
+
+                    </form>
+
+                    <form method="POST"
+                          action="{{ url_for('main.reject_claim', claim_id=claim.id) }}"
+                          style="display:inline;">
+
+                        <button type="submit">
+                            Reject
+                        </button>
+
+                    </form>
+
+                {% endif %}
+
+            </div>
+
+            <hr>
+
+        {% endfor %}
+
+    {% else %}
+
+        <p>No claim requests yet.</p>
+
+    {% endif %}
+
+</body>
+
+</html>

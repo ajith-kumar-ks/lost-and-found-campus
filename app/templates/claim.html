@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Submit Claim</title>
+</head>
+
+<body>
+
+    <h1>Submit Request</h1>
+
+    <h2>{{ item.name }}</h2>
+
+    <p>
+        Category: {{ item.category }}
+    </p>
+
+    <p>
+        Location: {{ item.location }}
+    </p>
+
+    <hr>
+
+    <form method="POST">
+
+        {{ form.hidden_tag() }}
+
+        <p>
+            {{ form.message.label }}
+        </p>
+
+        <p>
+            {{ form.message(rows=5, cols=50) }}
+        </p>
+
+        <p>
+            {{ form.verification_details.label }}
+        </p>
+
+        <p>
+            {{ form.verification_details(rows=5, cols=50) }}
+        </p>
+
+        <p>
+            {{ form.submit() }}
+        </p>
+
+    </form>
+
+</body>
+
+</html>

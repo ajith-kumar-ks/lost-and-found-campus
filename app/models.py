@@ -30,24 +30,29 @@ class Item(db.Model):   #SQLAlchemy turns that conceptually into a database tabl
 
 
 class Claim(db.Model):
-    id = db.column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     item_id = db.Column(db.Integer, db.ForeignKey("item.id"), nullable=False)
     claimant_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    message = db.Column(
+        db.Text,
+        nullable=False
+    )   #is the claimant's explanation:
+    verification_details = db.Column(
+        db.Text,
+        nullable=False
+    )   #is private identifying information:This information will be shown to the reporter, not publicly.
     status = db.Column(
         db.String(20),
         default="pending"
     )
-
     item = db.relationship(
         "Item",
         backref="claims"
     )
-
     claimant = db.relationship(
         "User",
         backref="claims"
     )
-
     def __repr__(self):
         return f"<Claim {self.id}>"
 
