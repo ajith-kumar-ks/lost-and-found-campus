@@ -18,7 +18,8 @@ class LoginForm(FlaskForm):
 
 class ItemForm(FlaskForm):
     name = StringField("Item Name", validators=[DataRequired(), Length(max=100)])
-    category = StringField("Category", validators=[DataRequired(), Length(max=50)])
+    category = SelectField('Category', choices=[("electronics", "Electronics"),("accessories", "accessories"),("stationaries", "Stationaries"),("clothing", "Clothing"),
+    ("id_cards", "ID / Cards"),("others", "Others")], validators=[DataRequired()])
     location = StringField("Location", validators=[DataRequired(), Length(max=100)])
     description = TextAreaField("Description")
     type = SelectField("Type", choices=[

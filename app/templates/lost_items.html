@@ -8,6 +8,37 @@
 
     <h1>Lost Items</h1>
 
+    <form method="GET">
+
+    <input
+        type="text"
+        name="search"
+        placeholder="Search item"
+        value="{{ search }}"
+    >
+
+    <input
+        type="text"
+        name="category"
+        placeholder="Category"
+        value="{{ category }}"
+    >
+
+    <input
+        type="text"
+        name="location"
+        placeholder="Location"
+        value="{{ location }}"
+    >
+
+    <button type="submit">
+        Search
+    </button>
+
+</form>
+
+<hr><hr>
+
     {% if items %}
 
         {% for item in items %}

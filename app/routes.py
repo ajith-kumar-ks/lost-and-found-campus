@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, flash
+from flask import Blueprint, render_template, redirect, url_for, flash, request
 from app import db
 from app.models import User, Item, Claim
 from app.forms import RegistrationForm, LoginForm, ItemForm, Claimform
@@ -27,8 +27,34 @@ def found():
 @main.route("/lost-items")
 @login_required
 def lost_items():
-    items = Item.query.filter_by(type='lost').all()
-    return render_template("lost_items.html", items = items)
+    search = request.args.get("search", "")
+    category = request.args.get("category", "")
+    location = request.args.get("location", "")
+    query = Item.query.filter_by(type='lost')
+
+    if search:
+        query = query.filter(
+            Item.name.ilike(f"%{search}%")
+        )
+    if category:
+        query = query.filter(
+            Item.category.ilike(f"%{category}%")
+        )
+    if location:
+        query = query.filter(
+            Item.location.ilike(f"%{location}%")
+        )
+    items = query.all()
+
+    return render_template(
+        "lost_items.html",
+        items=items,
+        search=search,
+        category=category,
+        location=location
+    )
+
+
 
 @main.route('/item/<int:item_id>')
 def item_detail(item_id):
@@ -39,8 +65,36 @@ def item_detail(item_id):
 @main.route("/found-items")
 @login_required
 def found_items():
-    items = Item.query.filter_by(type='found').all()
-    return render_template("found_items.html", items=items)
+    search = request.args.get("search", "")
+    category = request.args.get("category", "")
+    location = request.args.get("location", "")
+
+    query = Item.query.filter_by(type="found")
+
+    if search:
+        query = query.filter(
+            Item.name.ilike(f"%{search}%")
+        )
+
+    if category:
+        query = query.filter(
+            Item.category.ilike(f"%{category}%")
+        )
+
+    if location:
+        query = query.filter(
+            Item.location.ilike(f"%{location}%")
+        )
+
+    items = query.all()
+
+    return render_template(
+        "found_items.html",
+        items=items,
+        search=search,
+        category=category,
+        location=location
+    )
 
 
 @main.route("/register", methods=["GET", "POST"])
