@@ -24,6 +24,8 @@ def create_app():
 
     from app.routes import main
     app.register_blueprint(main)
+    from app.api import api
+    app.register_blueprint(api)
 
     with app.app_context():
         from app.models import Item, User
