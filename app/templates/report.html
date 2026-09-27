@@ -1,20 +1,10 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Report Item</title>
-</head>
+{% extends "base.html" %}
 
-<body>
+{% block title %}Report Item{% endblock %}
+
+{% block content %}
 
     <h1>Report Lost / Found Item</h1>
-    
-        {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <p>{{ message }}</p>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
 
     <form method="POST">
 
@@ -22,26 +12,31 @@
 
         <p>
             {{ form.name.label }}
+            <br>
             {{ form.name() }}
         </p>
 
         <p>
             {{ form.category.label }}
+            <br>
             {{ form.category() }}
         </p>
 
         <p>
             {{ form.location.label }}
+            <br>
             {{ form.location() }}
         </p>
 
         <p>
             {{ form.description.label }}
-            {{ form.description() }}
+            <br>
+            {{ form.description(rows=5) }}
         </p>
 
         <p>
             {{ form.type.label }}
+            <br>
             {{ form.type() }}
         </p>
 
@@ -51,7 +46,4 @@
 
     </form>
 
-    
-</body>
-</html>
-
+{% endblock %}

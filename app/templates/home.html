@@ -1,74 +1,51 @@
-{% if current_user.is_authenticated %}
+{% extends "base.html" %}
 
-    <p>Welcome, {{ current_user.name }}!</p>
-    <a href="{{ url_for('main.report') }}">
-        Report Lost / Found Item
-    </a>    
-    <br>
+{% block title %}Home - Campus Lost & Found{% endblock %}
 
-    <a href="{{ url_for('main.my_claims') }}">
-        View Claims on My Items
-    </a>
+{% block content %}
 
-    <br>
-    <a href="{{ url_for('main.logout') }}">Logout</a>
+    <h1>Campus Lost & Found</h1>
 
-{% else %}
+    {% if current_user.is_authenticated %}
 
-    <a href="{{ url_for('main.login') }}">Login</a>
-    <a href="{{ url_for('main.register') }}">Register</a>
+        <h2>Welcome, {{ current_user.name }}!</h2>
 
-{% endif %}
+        <p>Find lost items or report something you lost or found.</p>
 
-
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Lost & Found Campus</title>
-
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-
-<body>
-
-    <nav class="navbar">
-
-        <div class="logo">
-            Lost & Found
-        </div>
-
-        <div class="nav-links">
-            <a href="{{url_for('main.home')}}">Home</a>
-            <a href="{{url_for('main.lost_items')}}">Lost Items</a>
-            <a href="{{url_for('main.found_items')}}">Found Items</a>
-            <a href="{{url_for('main.login')}}">Login</a>
-        </div>
-
-    </nav>
-
-
-    <section class="hero">
-
-        <h1>Lost & Found Campus</h1>
-
-        <p>
-            Find what you lost. Return what you found.
-        </p>
-
-        <a href="#" class="btn btn-primary">
-            Report Lost Item
+        <a href="{{ url_for('main.report') }}">
+            Report Lost / Found Item
         </a>
 
-        <a href="#" class="btn btn-secondary">
-            Report Found Item
+        <br><br>
+
+        <a href="{{ url_for('main.lost_items') }}">
+            View Lost Items
         </a>
 
-    </section>
+        <br><br>
 
-</body>
+        <a href="{{ url_for('main.found_items') }}">
+            View Found Items
+        </a>
 
-</html>
+        <br><br>
+
+        <a href="{{ url_for('main.my_claims') }}">
+            View Claim Requests
+        </a>
+
+    {% else %}
+
+        <h2>Welcome!</h2>
+
+        <p>Please login or register to use the Lost & Found system.</p>
+
+        <a href="{{ url_for('main.login') }}">Login</a>
+
+        <br><br>
+
+        <a href="{{ url_for('main.register') }}">Register</a>
+
+    {% endif %}
+
+{% endblock %}

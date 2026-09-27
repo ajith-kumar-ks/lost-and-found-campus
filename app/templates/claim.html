@@ -1,11 +1,8 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
-    <title>Submit Claim</title>
-</head>
+{% block title %}Submit Claim{% endblock %}
 
-<body>
+{% block content %}
 
     <h1>Submit Request</h1>
 
@@ -27,17 +24,13 @@
 
         <p>
             {{ form.message.label }}
-        </p>
-
-        <p>
+            <br>
             {{ form.message(rows=5, cols=50) }}
         </p>
 
         <p>
             {{ form.verification_details.label }}
-        </p>
-
-        <p>
+            <br>
             {{ form.verification_details(rows=5, cols=50) }}
         </p>
 
@@ -47,6 +40,4 @@
 
     </form>
 
-</body>
-
-</html>
+{% endblock %}

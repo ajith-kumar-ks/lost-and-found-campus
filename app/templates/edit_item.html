@@ -1,9 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Edit Item</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Edit Item{% endblock %}
+
+{% block content %}
 
     <h1>Edit Item</h1>
 
@@ -13,38 +12,38 @@
 
         <p>
             {{ form.name.label }}
+            <br>
             {{ form.name() }}
         </p>
 
         <p>
             {{ form.category.label }}
+            <br>
             {{ form.category() }}
         </p>
 
         <p>
             {{ form.location.label }}
+            <br>
             {{ form.location() }}
         </p>
 
         <p>
             {{ form.description.label }}
-            {{ form.description() }}
+            <br>
+            {{ form.description(rows=5) }}
         </p>
 
         <p>
             {{ form.type.label }}
+            <br>
             {{ form.type() }}
         </p>
 
         <p>
-            {{ form.submit(value="Update Item") }}
+            {{ form.submit() }}
         </p>
 
     </form>
 
-    <a href="{{ url_for('main.item_detail', item_id=item.id) }}">
-        Cancel
-    </a>
-
-</body>
-</html>
+{% endblock %}

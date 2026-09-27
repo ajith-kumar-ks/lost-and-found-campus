@@ -1,18 +1,10 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Item Details</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-    <h1>Item Details</h1>
+{% block title %}{{ item.name }}{% endblock %}
 
-    <h2>{{ item.name }}</h2>
+{% block content %}
 
-    <p>
-        <strong>Type:</strong>
-        {{ item.type }}
-    </p>
+    <h1>{{ item.name }}</h1>
 
     <p>
         <strong>Category:</strong>
@@ -30,83 +22,63 @@
     </p>
 
     <p>
+        <strong>Type:</strong>
+        {{ item.type }}
+    </p>
+
+    <p>
         <strong>Status:</strong>
         {{ item.status }}
     </p>
 
     <p>
-        <strong>Reported by:</strong>
-        {{ item.reporter.name }}
+        Reported by: {{ item.reporter.name }}
     </p>
 
-    <a href="{{ url_for('main.lost_items') }}">
-        Back to Lost Items
-    </a>
-    <br>
-    <a href="{{ url_for('main.found_items') }}">
-        Back to Found Items
-    </a>
-    <br>
-{% if current_user.is_authenticated and current_user.id == item.user_id %}
+    <hr>
 
-    <a href="{{ url_for('main.edit_item', item_id=item.id) }}">
-        Edit Item
-    </a>
-    <br>
-
-<form method="POST"
-      action="{{ url_for('main.delete_item', item_id=item.id) }}"
-      style="display:inline;">
-
-    <button type="submit">
-        Delete Item
-    </button>
-    
-</form>
-    {% endif %}
-    <br>
-
-    
     {% if current_user.is_authenticated
-      and current_user.id != item.user_id
-      and item.status == "active" %}
+          and current_user.id != item.user_id %}
 
-  {% if item.type == "lost" %}
+        {% if item.type == "lost" %}
 
-        <p>
-            Did you find this item?
-        </p>
+            <p>Did you find this item?</p>
 
-        <form method="POST"
-              action="{{ url_for('main.claim_item', item_id=item.id) }}">
-
-            <button type="submit">
+            <a href="{{ url_for('main.claim_item', item_id=item.id) }}">
                 I Found This Item
-            </button>
+            </a>
 
-        </form>
+        {% elif item.type == "found" %}
 
-    {% elif item.type == "found" %}
+            <p>Is this your lost item?</p>
 
-        <p>
-            Is this your lost item?
-        </p>
-
-        <form method="POST"
-              action="{{ url_for('main.claim_item', item_id=item.id) }}">
-
-            <button type="submit">
+            <a href="{{ url_for('main.claim_item', item_id=item.id) }}">
                 This Is My Item
-            </button>
+            </a>
 
+        {% endif %}
+
+    {% endif %}
+
+    {% if current_user.is_authenticated
+          and current_user.id == item.user_id %}
+
+        <hr>
+
+        <a href="{{ url_for('main.edit_item', item_id=item.id) }}">
+            Edit Item
+        </a>
+
+        <form
+            method="POST"
+            action="{{ url_for('main.delete_item', item_id=item.id) }}"
+            style="display:inline;"
+        >
+            <button type="submit">
+                Delete Item
+            </button>
         </form>
 
     {% endif %}
 
-{% endif %}
-
-
-
-
-</body>
-</html>
+{% endblock %}

@@ -1,13 +1,10 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
-    <title>Claim Requests</title>
-</head>
+{% block title %}Claim Requests{% endblock %}
 
-<body>
+{% block content %}
 
-    <h1>Requests on My Items</h1>
+    <h1>Claim Requests</h1>
 
     {% if claims %}
 
@@ -18,21 +15,15 @@
                 <h2>{{ claim.item.name }}</h2>
 
                 <p>
-                    <strong>Item Type:</strong>
-                    {{ claim.item.type }}
+                    Type: {{ claim.item.type }}
                 </p>
 
                 <p>
-                    <strong>Location:</strong>
-                    {{ claim.item.location }}
+                    Location: {{ claim.item.location }}
                 </p>
 
-                <hr>
-
-                <h3>Claimant Information</h3>
-
                 <p>
-                    <strong>Name:</strong>
+                    <strong>Claimant:</strong>
                     {{ claim.claimant.name }}
                 </p>
 
@@ -41,15 +32,13 @@
                     {{ claim.claimant.email }}
                 </p>
 
-                <h3>Claimant's Message</h3>
-
                 <p>
+                    <strong>Message:</strong>
                     {{ claim.message }}
                 </p>
 
-                <h3>Verification Details</h3>
-
                 <p>
+                    <strong>Verification Details:</strong>
                     {{ claim.verification_details }}
                 </p>
 
@@ -60,25 +49,31 @@
 
                 {% if claim.status == "pending" %}
 
-                    <form method="POST"
-                          action="{{ url_for('main.accept_claim', claim_id=claim.id) }}"
-                          style="display:inline;">
-
+                    <form
+                        method="POST"
+                        action="{{ url_for('main.accept_claim', claim_id=claim.id) }}"
+                        style="display:inline;"
+                    >
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <button type="submit">
                             Accept
                         </button>
-
                     </form>
 
-                    <form method="POST"
-                          action="{{ url_for('main.reject_claim', claim_id=claim.id) }}"
-                          style="display:inline;">
-
+                    <form
+                        method="POST"
+                        action="{{ url_for('main.reject_claim', claim_id=claim.id) }}"
+                        style="display:inline;"
+                    >
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <button type="submit">
                             Reject
                         </button>
-
                     </form>
+
+                {% elif claim.status == "rejected" %}
+
+                    <p>This request was rejected.</p>
 
                 {% endif %}
 
@@ -94,6 +89,4 @@
 
     {% endif %}
 
-</body>
-
-</html>
+{% endblock %}
